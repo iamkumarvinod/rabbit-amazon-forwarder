@@ -2,7 +2,6 @@ package lambda
 
 import (
 	"errors"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/lambda"
@@ -49,8 +48,9 @@ func (f Forwarder) Push(message string) error {
 		return errors.New(forwarder.EmptyMessageError)
 	}
 	params := &lambda.InvokeInput{
-		FunctionName: aws.String(f.function),
-		Payload:      []byte(message),
+		FunctionName:   aws.String(f.function),
+		InvocationType: aws.String("Event"),
+		Payload:        []byte(message),
 	}
 	resp, err := f.lambdaClient.Invoke(params)
 	if err != nil {
